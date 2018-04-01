@@ -3,11 +3,17 @@
 
 #include <cmath>
 #include <string>
+#include <vector>
+#include <utility>
+#include <SFML/Graphics.hpp>
 
 const double PLAYER_HITBOX_RADIUS = 8;
 const double DEFAULT_BULLET_HITBOX_RADIUS = 8;
 const double PI = 3.14159265;
 const double TOLERANCE = 1e-5;
+
+class Command;
+typedef std::vector< std::tuple< std::vector< sf::Keyboard::Key >, std::vector< sf::Keyboard::Key >, Command* > > Keymap;
 
 struct Options {
     int SCREEN_WIDTH = 800;

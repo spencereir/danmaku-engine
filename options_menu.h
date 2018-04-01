@@ -14,10 +14,12 @@ protected:
     std::vector< std::vector< std::string > > submenu_option;
 
 public:
-    OptionsMenu(Game *g) : GameState{g} {}
+    OptionsMenu(Game *g);
     virtual ~OptionsMenu() = default;
 
-    virtual void handleInput(sf::Event);
+    void moveCursor(int dx, int dy);
+    virtual void select() = 0;
+
     virtual void update();
     virtual void draw();
 };

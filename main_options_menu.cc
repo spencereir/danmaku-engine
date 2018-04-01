@@ -7,6 +7,10 @@ MainOptionsMenu::MainOptionsMenu(Game *g) : OptionsMenu{g} {
     submenu_option = {{"Setting 1-1", "Setting 1-2"}, {"Setting 2-1", "Setting 2-2", "Setting 2-3"}, {"Setting 3-1", "Setting 3-2"}, {"Save", "Default"}};
 }
 
+void MainOptionsMenu::select() {
+    parent->popState();
+}
+
 void MainOptionsMenu::draw() {
     window->clear();
     OptionsMenu::draw();

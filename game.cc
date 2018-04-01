@@ -18,15 +18,6 @@ void Game::handleInput() {
     if (state.empty()) finished = true;
     else state.back()->handleInput();
 }
-    /*
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            window->close(), finished = true;
-        else if (!state.empty())
-            state.back()->handleInput(event);
-    }
-}*/
 
 void Game::update() {
     if (state.empty()) finished = true;
@@ -50,17 +41,15 @@ void Game::popState(int to_size) {
     }
 }
 
-GameState::GameState(Game *g, std::vector< std::pair< std::vector< sf::Keyboard::Key >, Command* > > keymap) : parent{g}, window{g->getWindow()}, ih{new InputHandler{keymap}} {}
+GameState::GameState(Game *g) : parent{g}, window{g->getWindow()}, ih{new InputHandler} {}
+
+void GameState::setKeymap(Keymap keymap) {
+    ih->setKeymap(keymap);
+}
 
 void GameState::handleInput() {
-    sf::Event event;
-    while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            parent->popState(0);
-    }
-
-    std::vector<Command*> input = ih->handleInput();
+    std::vector<Command*> input = ih->handleInput(window);
     for (Command *c : input) {
-        c->execute(this);
+        c->execute();
     }
 }

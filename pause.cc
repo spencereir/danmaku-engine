@@ -14,32 +14,20 @@ Pause::Pause(Game *g) : Menu{g} {
     menu_option.push_back("Quit");
 }
 
-void Pause::handleInput(sf::Event event) {
-    switch (event.type) {
-        case sf::Event::KeyPressed:
-            switch (event.key.code) {
-                case sf::Keyboard::Escape:
-                    parent->popState();
-                    break;
-                case sf::Keyboard::Return:
-                    switch (cursor) {
-                        case 0:
-                            parent->popState();
-                            break;
-                        case 1:
-                            parent->popState(2);
-                            parent->pushState(new World{parent});
-                            break;
-                        case 2:
-                            parent->popState(1);
-                            break;
-                        case 3:
-                            parent->popState(0);
-                    }
-                    break;
-                default:
-                    Menu::handleInput(event);
-            }
+void Pause::select() {
+    switch (cursor) {
+        case 0:
+            parent->popState();
+            break;
+        case 1:
+            parent->popState(2);
+            parent->pushState(new World{parent});
+            break;
+        case 2:
+            parent->popState(1);
+            break;
+        case 3:
+            parent->popState(0);
             break;
     }
 }

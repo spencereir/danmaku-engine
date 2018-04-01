@@ -11,6 +11,10 @@ Player::~Player() {
     delete p;
 }
 
+void Player::move(Vec2 vel) {
+    loc += vel;
+}
+
 std::vector<Bullet*> Player::get_bullets(int frame) {
     std::vector<Bullet*> bullets;
     if (frame % 3 == 0) {

@@ -31,7 +31,6 @@ public:
     void registerPlayer(Player*);
     std::vector<Bullet*> getBullets();
 
-    void handleInput(sf::Event) override;
     void update() override;
     void draw() override;
 };

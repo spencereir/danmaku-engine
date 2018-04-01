@@ -8,6 +8,7 @@ class Game;
 class MainOptionsMenu : public OptionsMenu {
 public:
     MainOptionsMenu(Game*);
+    void select();
     void draw() override;
 };
 

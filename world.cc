@@ -1,3 +1,4 @@
+#include <vector>
 #include "world.h"
 #include "resources.h"
 #include "spawner.h"
@@ -6,11 +7,25 @@
 #include "game.h"
 #include "pause.h"
 #include "hitbox.h"
-#include <vector>
+#include "input.h"
 
 World::World(Game *g) : GameState{g}, player{new Player}  {
+    player_vel = 5.0;
+    double focus_vel = 2.0;
+
+    setKeymap({
+        { {sf::Keyboard::Left}, {}, new Commands::Player::MoveLeft{this, player, player_vel}},
+        { {sf::Keyboard::Right}, {}, new Commands::Player::MoveRight{this, player, player_vel}},
+        { {sf::Keyboard::Up}, {}, new Commands::Player::MoveUp{this, player, player_vel}},
+        { {sf::Keyboard::Down}, {}, new Commands::Player::MoveDown{this, player, player_vel}},
+        { {sf::Keyboard::LShift, sf::Keyboard::Left}, {}, new Commands::Player::MoveLeft{this, player, focus_vel-player_vel}},
+        { {sf::Keyboard::LShift, sf::Keyboard::Right}, {}, new Commands::Player::MoveRight{this, player, focus_vel-player_vel}},
+        { {sf::Keyboard::LShift, sf::Keyboard::Up}, {}, new Commands::Player::MoveUp{this, player, focus_vel-player_vel}},
+        { {sf::Keyboard::LShift, sf::Keyboard::Down}, {}, new Commands::Player::MoveDown{this, player, focus_vel-player_vel}}
+    });
+
     player->setLocation({100,900});
-    Spawner *s = new Spawners::BoWaP{1, 144, 0, 1};
+    Spawner *s = new Spawners::BoWaP{1, 6, 0.05, 3};
     s->setLocation({300,200});
     player_vel = 5;
     registerSpawner(s);
@@ -96,39 +111,8 @@ void World::checkCollisions() {
     }
 }
 
-void World::handleInput(sf::Event event) {
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Escape) {
-            parent->pushState(new Pause{parent});
-        } else if (event.key.code == sf::Keyboard::LShift) {
-            player_vel = 2;
-        }
-    } else if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::LShift) {
-            player_vel = 5;
-        }
-    }
-}
-
 void World::update() {
     frame++;
-    player_vec = {0,0};
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        player_vec.y = -1;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        player_vec.y = 1;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        player_vec.x = -1;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        player_vec.x = 1;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-        spawnPlayerBullets();
-    }
-    player->move(player_vec * player_vel);
     moveBullets();
     spawnBullets();
     checkCollisions();

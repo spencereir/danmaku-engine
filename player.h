@@ -6,6 +6,7 @@
 #include "drawable.h"
 
 class Bullet;
+class BulletPath;
 
 class Player : public Drawable {
     double hitbox_radius;
@@ -18,7 +19,7 @@ public:
     Vec2 getLocation() { return loc; }
     double getHitboxRadius() { return hitbox_radius; }
     void setLocation(Vec2 _loc) { loc = _loc; }
-    void move(Vec2 vel) { loc += vel; }
+    void move(Vec2);
     std::vector<Bullet*> get_bullets(int);
 };
 

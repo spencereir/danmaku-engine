@@ -9,26 +9,16 @@ MainMenu::MainMenu(Game *g) : Menu{g} {
     menu_option.push_back("Quit");
 }
 
-void MainMenu::handleInput(sf::Event event) {
-    switch (event.type) {
-        case sf::Event::KeyPressed:
-            switch (event.key.code) {
-                case sf::Keyboard::Return:
-                    switch (cursor) {
-                        case 0: // Start Game
-                            parent->pushState(new World{parent});
-                            break;
-                        case 1: // Options
-                            parent->pushState(new MainOptionsMenu{parent});
-                            break;
-                        case 2: // Quit
-                            parent->popState();
-                            break;
-                    }
-                    break;
-                default:
-                    Menu::handleInput(event);
-            }
+void MainMenu::select() {
+    switch (cursor) {
+        case 0:
+            parent->pushState(new World{parent});
+            break;
+        case 1:
+            parent->pushState(new MainOptionsMenu{parent});
+            break;
+        case 2:
+            parent->popState();
             break;
     }
 }

@@ -9,7 +9,7 @@ class Game;
 class MainMenu : public Menu {
 public:
     MainMenu(Game*);
-    void handleInput(sf::Event) override;
+    void select();
 };
 
 #endif

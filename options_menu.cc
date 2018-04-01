@@ -1,28 +1,23 @@
 #include "options_menu.h"
 #include "resources.h"
+#include "input.h"
 
-#define min(a,b) (a < b ? a : b)
+#define clip(x,a,b) (x < a ? a : (x > b ? b : x))
 #define max(a,b) (a < b ? b : a)
 
-void OptionsMenu::handleInput(sf::Event event) {
-    switch (event.type) {
-        case sf::Event::KeyPressed:
-            switch (event.key.code) {
-                case sf::Keyboard::Up:
-                    cursor = max(cursor-1, 0);
-                    break;
-                case sf::Keyboard::Down:
-                    cursor = min(cursor+1, (int)max(subcursor.size(), menu_option.size())-1);
-                    break;
-                case sf::Keyboard::Left:
-                    subcursor[cursor] = max(subcursor[cursor]-1, 0);
-                    break;
-                case sf::Keyboard::Right:
-                    subcursor[cursor] = min(subcursor[cursor]+1, (int)submenu_option[cursor].size()-1);
-                    break;
-            }
-            break;
-    }
+OptionsMenu::OptionsMenu(Game *g) : GameState{g} {
+    setKeymap({
+        { {}, {sf::Keyboard::Left}, new Commands::OptionsMenu::CursorLeft{this}},
+        { {}, {sf::Keyboard::Right}, new Commands::OptionsMenu::CursorRight{this}},
+        { {}, {sf::Keyboard::Down}, new Commands::OptionsMenu::CursorDown{this}},
+        { {}, {sf::Keyboard::Up}, new Commands::OptionsMenu::CursorUp{this}},
+        { {}, {sf::Keyboard::Return}, new Commands::OptionsMenu::Select{this}}
+    });
+}
+
+void OptionsMenu::moveCursor(int dx, int dy) {
+    cursor = clip(cursor+dx, 0, (int)max(subcursor.size(), menu_option.size())-1);
+    subcursor[cursor] = clip(subcursor[cursor]+dy, 0, (int)submenu_option[cursor].size()-1);
 }
 
 void OptionsMenu::update() {}

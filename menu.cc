@@ -1,22 +1,17 @@
 #include "menu.h"
 #include "resources.h"
 
-#define min(a,b) (a < b ? a : b)
-#define max(a,b) (a < b ? b : a)
+#define clip(x,a,b) (x < a ? a : (x > b ? b : x))
 
-void Menu::handleInput(sf::Event event) {
-    switch (event.type) {
-        case sf::Event::KeyPressed:
-            switch (event.key.code) {
-                case sf::Keyboard::Up:
-                    cursor = max(cursor-1, 0);
-                    break;
-                case sf::Keyboard::Down:
-                    cursor = min(cursor+1, (int)menu_option.size()-1);
-                    break;
-            }
-            break;
-    }
+Menu::Menu(Game *g) : GameState{g}, cursor{0} {
+    setKeymap({
+        { {}, {sf::Keyboard::Up}, new Commands::Menu::CursorUp{this}},
+        { {}, {sf::Keyboard::Down}, new Commands::Menu::CursorDown{this}},
+        { {}, {sf::Keyboard::Return}, new Commands::Menu::Select{this}}
+    });
+};
+void Menu::moveCursor(int delta) {
+    cursor = clip(cursor + delta, 0, (int)menu_option.size()-1);
 }
 
 void Menu::update() {}

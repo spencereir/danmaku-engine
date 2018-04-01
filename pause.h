@@ -10,7 +10,7 @@ class Pause : public Menu {
 
 public:
     Pause(Game*);
-    void handleInput(sf::Event) override;
+    void select();
     void draw() override;
 };
 

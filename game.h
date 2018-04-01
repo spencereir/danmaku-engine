@@ -16,7 +16,8 @@ protected:
     InputHandler *ih;
 
 public:
-    GameState(Game*, std::vector<std::pair<std::vector<sf::Keyboard::Key>,Command*>>);
+    GameState(Game*);
+    void setKeymap(Keymap);
     virtual ~GameState() = default;
     virtual void handleInput();
     virtual void update() = 0;

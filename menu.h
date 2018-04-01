@@ -2,6 +2,7 @@
 #define __MENU_H_
 
 #include <vector>
+#include "input.h"
 #include "game.h"
 
 class Menu : public GameState {
@@ -10,10 +11,12 @@ protected:
     std::vector<std::string> menu_option;
 
 public:
-    Menu(Game *g) : GameState{g}, cursor{0} {}
+    Menu(Game*);
     virtual ~Menu() = default;
 
-    virtual void handleInput(sf::Event);
+    void moveCursor(int delta);
+    virtual void select() = 0;
+
     virtual void update();
     virtual void draw();
 };
