@@ -9,7 +9,7 @@ class Pause : public Menu {
     sf::Sprite old_screen;
 
 public:
-    Pause(Game*);
+    Pause(Game&);
     void select();
     void draw() override;
 };

@@ -1,6 +1,6 @@
 #include "main_options_menu.h"
 
-MainOptionsMenu::MainOptionsMenu(Game *g) : OptionsMenu{g} {
+MainOptionsMenu::MainOptionsMenu(Game &g) : OptionsMenu{g} {
     cursor = 0;
     menu_option = {"Some setting 1", "Some setting 2", "Are you happy alex"};
     subcursor = {0, 0, 0, 0};
@@ -8,11 +8,11 @@ MainOptionsMenu::MainOptionsMenu(Game *g) : OptionsMenu{g} {
 }
 
 void MainOptionsMenu::select() {
-    parent->popState();
+    parent.popState();
 }
 
 void MainOptionsMenu::draw() {
-    window->clear();
+    window.clear();
     OptionsMenu::draw();
-    window->display();
+    window.display();
 }

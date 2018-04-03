@@ -8,7 +8,7 @@ class Game;
 
 class MainMenu : public Menu {
 public:
-    MainMenu(Game*);
+    MainMenu(Game&);
     void select();
 };
 

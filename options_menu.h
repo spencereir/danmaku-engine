@@ -14,7 +14,7 @@ protected:
     std::vector< std::vector< std::string > > submenu_option;
 
 public:
-    OptionsMenu(Game *g);
+    OptionsMenu(Game &g);
     virtual ~OptionsMenu() = default;
 
     void moveCursor(int dx, int dy);

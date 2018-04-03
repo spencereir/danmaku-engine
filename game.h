@@ -3,21 +3,23 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include "data.h"
+#include "input.h"
 
 class Game;
-class Command;
 class InputHandler;
 
 class GameState {
 protected:
-    Game *parent;
-    sf::RenderWindow *window;
-    InputHandler *ih;
+    Game &parent;
+    sf::RenderWindow &window;
+    std::unique_ptr<InputHandler> ih;
 
 public:
-    GameState(Game*);
-    virtual ~GameState();
+    GameState(Game&);
+    virtual ~GameState() = default;
+    Game &getParent() { return parent; }
     void setKeymap(Keymap);
     virtual void handleInput();
     virtual void update() = 0;
@@ -26,20 +28,20 @@ public:
 
 class Game {
     Options options;
-    sf::RenderWindow *window;
+    sf::RenderWindow window;
     bool finished;
-    std::vector<GameState*> state;
+    std::vector< std::shared_ptr< GameState > > state;
 
 public:
     Game(std::string="game.conf");
     ~Game();
-    sf::RenderWindow *getWindow() { return window; }
+    sf::RenderWindow &getWindow() { return window; }
     void handleInput();
     void update();
     void draw();
 
     // Game state functions
-    void pushState(GameState *g) { state.push_back(g); }
+    void pushState(GameStateType);
     void popState(int=-1);
 
     bool isFinished() { return finished; }

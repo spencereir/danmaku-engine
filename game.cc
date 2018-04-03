@@ -3,16 +3,18 @@
 #include "game.h"
 #include "data.h"
 #include "world.h"
+#include "pause.h"
+#include "main_options_menu.h"
 #include "main_menu.h"
 #include "input.h"
 
-Game::Game(std::string options_file) : options{loadOptionsFromFile(options_file)}, window{new sf::RenderWindow{sf::VideoMode(options.SCREEN_WIDTH, options.SCREEN_HEIGHT), options.WINDOW_TITLE}}, finished{false}, state{new MainMenu{this}} {
-    window->setFramerateLimit(options.FRAME_LIMIT);
+Game::Game(std::string options_file) : options{loadOptionsFromFile(options_file)}, window{sf::VideoMode(options.SCREEN_WIDTH, options.SCREEN_HEIGHT), options.WINDOW_TITLE}, finished{false} {
+    pushState(GameStateType::MainMenu);
+    window.setFramerateLimit(options.FRAME_LIMIT);
 }
 
 Game::~Game() {
-    window->close();
-    delete window;
+    window.close();
     popState(0);
 }
 
@@ -31,31 +33,42 @@ void Game::draw() {
     else state.back()->draw();
 }
 
+void Game::pushState(GameStateType gst) {
+    switch (gst) {
+        case GameStateType::MainMenu:
+            state.push_back(std::make_shared<MainMenu>(*this));
+            break;
+        case GameStateType::PauseMenu:
+            state.push_back(std::make_shared<Pause>(*this));
+            break;
+        case GameStateType::MainOptionsMenu:
+            state.push_back(std::make_shared<MainOptionsMenu>(*this));
+            break;
+        case GameStateType::World:
+            state.push_back(std::make_shared<World>(*this));
+            break;
+    }
+}
+
 void Game::popState(int to_size) {
     if (to_size < 0) {
-        delete state.back();
         state.pop_back();
         return;
     }
     while ((int)state.size() > to_size) {
-        delete state.back();
         state.pop_back();
     }
 }
 
-GameState::GameState(Game *g) : parent{g}, window{g->getWindow()}, ih{new InputHandler} {}
-
-GameState::~GameState() {
-    delete ih;
-}
+GameState::GameState(Game &g) : parent{g}, window{g.getWindow()}, ih{std::make_unique<InputHandler>()} {}
 
 void GameState::setKeymap(Keymap keymap) {
     ih->setKeymap(keymap);
 }
 
 void GameState::handleInput() {
-    std::vector<Command*> input = ih->handleInput(window);
-    for (Command *c : input) {
+    std::vector< std::shared_ptr<Command> > input = ih->handleInput(window);
+    for (std::shared_ptr<Command> c : input) {
         c->execute();
     }
 }

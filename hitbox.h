@@ -4,6 +4,8 @@
 #include <utility>
 #include "data.h"
 
-bool intersect(std::pair< Vec2, double > hitbox_1, std::pair< Vec2, double > hitbox_2);
+typedef std::pair< Vec2, double > Hitbox;
+
+bool intersect(Hitbox hitbox_1, Hitbox hitbox_2);
 
 #endif

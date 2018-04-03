@@ -27,11 +27,11 @@ void Drawable::setRate(int _rate) {
     rate = _rate;
 }
 
-void Drawable::draw(sf::RenderWindow *w) {
+void Drawable::draw(sf::RenderWindow &w) {
     sf::Sprite &s = spritesheet[state][frame/rate];
     Vec2 loc = getLocation();
     s.setPosition({(float)loc.x-s.getLocalBounds().width/2, (float)loc.y-s.getLocalBounds().height/2});
-    w->draw(s);
+    w.draw(s);
     frame++;
     if (frame >= rate*(int)spritesheet[state].size()) frame = 0;
 }

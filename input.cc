@@ -5,16 +5,16 @@
 #include "world.h"
 #include "player.h"
 
-std::vector<Command*> InputHandler::handleInput(sf::RenderWindow *window) {
+std::vector< std::shared_ptr< Command > > InputHandler::handleInput(sf::RenderWindow &window) {
     std::set< sf::Keyboard::Key > key_pressed;
     sf::Event event;
-    while (window->pollEvent(event)) {
+    while (window.pollEvent(event)) {
         if (event.type == sf::Event::KeyPressed) {
             key_pressed.insert(event.key.code);
         }
     }
 
-    std::vector<Command*> ret;
+    std::vector< std::shared_ptr< Command > > ret;
     for (auto p : keymap) {
         bool good = true;
         for (int i = 0; good && i < (int)std::get<0>(p).size(); i++) {
@@ -32,48 +32,52 @@ void Command::execute() {
 }
 
 void Commands::Menu::CursorDown::execute() {
-    menu->moveCursor(1);
+    menu.moveCursor(1);
 }
 
 void Commands::Menu::CursorUp::execute() {
-    menu->moveCursor(-1);
+    menu.moveCursor(-1);
 }
 void Commands::Menu::Select::execute() {
-    menu->select();
+    menu.select();
 }
 
 void Commands::OptionsMenu::CursorDown::execute() {
-    menu->moveCursor(1, 0);
+    menu.moveCursor(1, 0);
 }
 
 void Commands::OptionsMenu::CursorUp::execute() {
-    menu->moveCursor(-1, 0);
+    menu.moveCursor(-1, 0);
 }
 
 void Commands::OptionsMenu::CursorLeft::execute() {
-    menu->moveCursor(0, -1);
+    menu.moveCursor(0, -1);
 }
 
 void Commands::OptionsMenu::CursorRight::execute() {
-    menu->moveCursor(0, 1);
+    menu.moveCursor(0, 1);
 }
 
 void Commands::OptionsMenu::Select::execute() {
-    menu->select();
+    menu.select();
 }
 
 void Commands::Player::MoveLeft::execute() {
-    player->move({-vel, 0});
+    player.move({-vel, 0});
 }
 
 void Commands::Player::MoveRight::execute() {
-    player->move({vel, 0});
+    player.move({vel, 0});
 }
 
 void Commands::Player::MoveUp::execute() {
-    player->move({0, -vel});
+    player.move({0, -vel});
 }
 
 void Commands::Player::MoveDown::execute() {
-    player->move({0, vel});
+    player.move({0, vel});
+}
+
+void Commands::World::Pause::execute() {
+    world.getParent().pushState(GameStateType::PauseMenu);
 }

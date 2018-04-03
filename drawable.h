@@ -16,7 +16,7 @@ public:
     Drawable(std::vector< std::vector< std::string > >, int=10);
     void setState(int);
     void setRate(int);
-    void draw(sf::RenderWindow*);
+    void draw(sf::RenderWindow&);
     virtual Vec2 getLocation() = 0;
 };
 

@@ -2,6 +2,7 @@
 #define __WORLD_H_
 
 #include <vector>
+#include <memory>
 #include "game.h"
 
 class Bullet;
@@ -9,10 +10,10 @@ class Spawner;
 class Player;
 
 class World : public GameState {
-    Player *player;
-    std::vector<Bullet*> bullet;
-    std::vector<Bullet*> player_bullet;
-    std::vector<Spawner*> spawner;
+    std::unique_ptr<Player> player;
+    std::vector< std::shared_ptr<Bullet> > bullet;
+    std::vector< std::shared_ptr<Bullet> > player_bullet;
+    std::vector< std::shared_ptr<Spawner> > spawner;
     void moveBullets();
     void spawnBullets();
     void spawnPlayerBullets();
@@ -23,11 +24,10 @@ class World : public GameState {
     double player_vel;
 
 public:
-    World(Game*);
-    ~World();
-    void registerBullet(Bullet*);
-    void registerPlayerBullet(Bullet*);
-    void registerSpawner(Spawner*);
+    World(Game&);
+    void registerBullet(std::shared_ptr<Bullet>);
+    void registerPlayerBullet(std::shared_ptr<Bullet>);
+    void registerSpawner(std::shared_ptr<Spawner>);
 
     void update() override;
     void draw() override;

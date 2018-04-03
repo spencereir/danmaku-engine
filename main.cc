@@ -1,7 +1,7 @@
 #include "game.h"
 
 int main() {
-    Game G{};
+    Game G;
 
     while (!G.isFinished()) {
         G.handleInput();

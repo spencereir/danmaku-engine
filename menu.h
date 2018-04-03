@@ -11,7 +11,7 @@ protected:
     std::vector<std::string> menu_option;
 
 public:
-    Menu(Game*);
+    Menu(Game&);
     virtual ~Menu() = default;
 
     void moveCursor(int delta);

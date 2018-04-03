@@ -2,6 +2,7 @@
 #define __PLAYER_H_
 
 #include <vector>
+#include <memory>
 #include "data.h"
 #include "drawable.h"
 
@@ -11,16 +12,16 @@ class Path;
 class Player : public Drawable {
     double hitbox_radius;
     Vec2 loc;
-    Path *p;
+    std::shared_ptr<Path> p;
 
 public:
     Player();
-    virtual ~Player();
+    virtual ~Player() = default;
     Vec2 getLocation() { return loc; }
     double getHitboxRadius() { return hitbox_radius; }
     void setLocation(Vec2 _loc) { loc = _loc; }
     void move(Vec2);
-    std::vector<Bullet*> get_bullets(int);
+    std::vector< std::shared_ptr<Bullet> > get_bullets(int);
 };
 
 #endif

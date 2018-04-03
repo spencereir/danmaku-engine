@@ -1,15 +1,17 @@
+#include <memory>
 #include "menu.h"
 #include "resources.h"
 
 #define clip(x,a,b) (x < a ? a : (x > b ? b : x))
 
-Menu::Menu(Game *g) : GameState{g}, cursor{0} {
+Menu::Menu(Game &g) : GameState{g}, cursor{0} {
     setKeymap({
-        { {}, {sf::Keyboard::Up}, new Commands::Menu::CursorUp{this}},
-        { {}, {sf::Keyboard::Down}, new Commands::Menu::CursorDown{this}},
-        { {}, {sf::Keyboard::Return}, new Commands::Menu::Select{this}}
+        { {}, {sf::Keyboard::Up}, std::make_shared<Commands::Menu::CursorUp>(*this)},
+        { {}, {sf::Keyboard::Down}, std::make_shared<Commands::Menu::CursorDown>(*this)},
+        { {}, {sf::Keyboard::Return}, std::make_shared<Commands::Menu::Select>(*this)}
     });
 };
+
 void Menu::moveCursor(int delta) {
     cursor = clip(cursor + delta, 0, (int)menu_option.size()-1);
 }
@@ -17,7 +19,7 @@ void Menu::moveCursor(int delta) {
 void Menu::update() {}
 
 void Menu::draw() {
-    window->clear();
+    window.clear();
     sf::Font f = getResource<sf::Font>("resources/fonts/DejaVuSans.ttf");
     int i = 0;
     for (std::string option : menu_option) {
@@ -27,8 +29,8 @@ void Menu::draw() {
         if (cursor == i) {
             t.setFillColor(sf::Color::Green);
         }
-        window->draw(t);
+        window.draw(t);
         i++;
     }
-    window->display();
+    window.display();
 }

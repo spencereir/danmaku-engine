@@ -1,3 +1,4 @@
+#include <memory>
 #include "options_menu.h"
 #include "resources.h"
 #include "input.h"
@@ -5,13 +6,13 @@
 #define clip(x,a,b) (x < a ? a : (x > b ? b : x))
 #define max(a,b) (a < b ? b : a)
 
-OptionsMenu::OptionsMenu(Game *g) : GameState{g} {
+OptionsMenu::OptionsMenu(Game &g) : GameState{g} {
     setKeymap({
-        { {}, {sf::Keyboard::Left}, new Commands::OptionsMenu::CursorLeft{this}},
-        { {}, {sf::Keyboard::Right}, new Commands::OptionsMenu::CursorRight{this}},
-        { {}, {sf::Keyboard::Down}, new Commands::OptionsMenu::CursorDown{this}},
-        { {}, {sf::Keyboard::Up}, new Commands::OptionsMenu::CursorUp{this}},
-        { {}, {sf::Keyboard::Return}, new Commands::OptionsMenu::Select{this}}
+        { {}, {sf::Keyboard::Left}, std::make_shared<Commands::OptionsMenu::CursorLeft>(*this)},
+        { {}, {sf::Keyboard::Right}, std::make_shared<Commands::OptionsMenu::CursorRight>(*this)},
+        { {}, {sf::Keyboard::Down}, std::make_shared<Commands::OptionsMenu::CursorDown>(*this)},
+        { {}, {sf::Keyboard::Up}, std::make_shared<Commands::OptionsMenu::CursorUp>(*this)},
+        { {}, {sf::Keyboard::Return}, std::make_shared<Commands::OptionsMenu::Select>(*this)}
     });
 }
 
@@ -37,7 +38,7 @@ void OptionsMenu::draw() {
         t.setPosition({(float)start_x, (float)start_y + (charsize + padding) * i});
         if (cursor == i) t.setFillColor(sf::Color::Green);
         max_x = max(max_x, start_x + (int)t.getLocalBounds().width);
-        window->draw(t);
+        window.draw(t);
     }
 
     for (int j = 0;; j++) {
@@ -56,7 +57,7 @@ void OptionsMenu::draw() {
                 }
             }
             next_max_x = max(next_max_x, max_x + deadzone + (int)t.getLocalBounds().width);
-            window->draw(t);
+            window.draw(t);
         }
         if (!drew_one) break;
         max_x = next_max_x;
