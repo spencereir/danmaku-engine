@@ -5,10 +5,10 @@
 #include "data.h"
 #include <SFML/Graphics.hpp>
 
-class BulletPath;
+class Path;
 
 class Bullet : public Drawable {
-    BulletPath *p;
+    Path *p;
     Vec2 loc;
     int lifetime;
     bool manage_path;
@@ -17,7 +17,7 @@ class Bullet : public Drawable {
     double hitbox_radius;
 
 public:
-    Bullet(Vec2, BulletPath*, double=DEFAULT_BULLET_HITBOX_RADIUS, bool=false);
+    Bullet(Vec2, Path*, double=DEFAULT_BULLET_HITBOX_RADIUS, bool=false);
     virtual ~Bullet();
     Vec2 getLocation();
     double getHitboxRadius() { return hitbox_radius; }

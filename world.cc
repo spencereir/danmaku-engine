@@ -40,6 +40,10 @@ World::~World() {
         delete bullet.back();
         bullet.pop_back();
     }
+    while (!player_bullet.empty()) {
+        delete player_bullet.back();
+        player_bullet.pop_back();
+    }
     delete player;
 }
 
@@ -53,10 +57,6 @@ void World::registerPlayerBullet(Bullet *b) {
 
 void World::registerSpawner(Spawner *s) {
     spawner.push_back(s);
-}
-
-void World::registerPlayer(Player *p) {
-    player = p;
 }
 
 void World::moveBullets() {
@@ -80,12 +80,6 @@ void World::moveBullets() {
             new_bullets.push_back(b);
     }
     player_bullet = new_bullets;
-}
-
-std::vector<Bullet*> World::getBullets() {
-    auto x = bullet;
-    for (auto y : player_bullet) x.push_back(y);
-    return x;
 }
 
 void World::spawnBullets() {
@@ -120,7 +114,10 @@ void World::update() {
 
 void World::draw() {
     window->clear();
-    for (Bullet *b : getBullets()) {
+    for (Bullet *b : bullet) {
+        b->draw(window);
+    }
+    for (Bullet *b : player_bullet) {
         b->draw(window);
     }
 

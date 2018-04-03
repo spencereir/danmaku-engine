@@ -12,6 +12,8 @@ Game::Game(std::string options_file) : options{loadOptionsFromFile(options_file)
 
 Game::~Game() {
     window->close();
+    delete window;
+    popState(0);
 }
 
 void Game::handleInput() {
@@ -42,6 +44,10 @@ void Game::popState(int to_size) {
 }
 
 GameState::GameState(Game *g) : parent{g}, window{g->getWindow()}, ih{new InputHandler} {}
+
+GameState::~GameState() {
+    delete ih;
+}
 
 void GameState::setKeymap(Keymap keymap) {
     ih->setKeymap(keymap);

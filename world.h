@@ -28,8 +28,6 @@ public:
     void registerBullet(Bullet*);
     void registerPlayerBullet(Bullet*);
     void registerSpawner(Spawner*);
-    void registerPlayer(Player*);
-    std::vector<Bullet*> getBullets();
 
     void update() override;
     void draw() override;

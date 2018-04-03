@@ -17,8 +17,8 @@ protected:
 
 public:
     GameState(Game*);
+    virtual ~GameState();
     void setKeymap(Keymap);
-    virtual ~GameState() = default;
     virtual void handleInput();
     virtual void update() = 0;
     virtual void draw() = 0;

@@ -1,6 +1,6 @@
 #include "bullet.h"
 #include "player.h"
-#include "bullet_path.h"
+#include "path.h"
 
 Player::Player() : Drawable{ { { "resources/textures/players/reimu/back.png" } } } {
     hitbox_radius = PLAYER_HITBOX_RADIUS;

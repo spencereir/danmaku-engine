@@ -1,4 +1,4 @@
-#include "bullet_path.h"
+#include "path.h"
 #include "data.h"
 
 Vec2 Paths::ThetaMag::loc(int t) {

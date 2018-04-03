@@ -6,12 +6,12 @@
 #include "drawable.h"
 
 class Bullet;
-class BulletPath;
+class Path;
 
 class Player : public Drawable {
     double hitbox_radius;
     Vec2 loc;
-    BulletPath *p;
+    Path *p;
 
 public:
     Player();
