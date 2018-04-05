@@ -13,7 +13,7 @@ public:
     virtual ~Spawner() = default;
     Vec2 getLocation() { return loc; }
     void setLocation(Vec2 _loc) { loc = _loc; }
-    virtual std::vector< std::shared_ptr<Bullet> > get_bullets(int) = 0;
+    virtual std::vector< std::shared_ptr<Bullet> > getBullets(int) = 0;
 };
 
 namespace Spawners {
@@ -27,7 +27,7 @@ namespace Spawners {
 
     public:
         BoWaP(double mag=1, double num_branches=6, double acc=0.1, int period=5) : theta{0}, mag{mag}, vel{0}, acc{acc}, num_branches{num_branches}, period{period} {}
-        std::vector< std::shared_ptr<Bullet> > get_bullets(int) override;
+        std::vector< std::shared_ptr<Bullet> > getBullets(int) override;
     };
 };
 

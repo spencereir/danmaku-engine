@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include <queue>
 #include "data.h"
 #include "input.h"
 
@@ -31,11 +32,13 @@ class Game {
     sf::RenderWindow window;
     bool finished;
     std::vector< std::shared_ptr< GameState > > state;
+    std::queue< std::pair< int, std::shared_ptr< GameState > > > new_states;
 
 public:
     Game(std::string="game.conf");
     ~Game();
     sf::RenderWindow &getWindow() { return window; }
+    void close() { finished = true; }
     void handleInput();
     void update();
     void draw();

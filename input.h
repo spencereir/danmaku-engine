@@ -10,14 +10,16 @@ public:
     virtual void execute() = 0;
 };
 
+class Game;
 
 class InputHandler {
+    Game &g;
     Keymap keymap;
 public:
+    InputHandler(Game &g) : g{g} {}
     void setKeymap(Keymap _keymap) { keymap = _keymap; }
     std::vector< std::shared_ptr<Command> > handleInput(sf::RenderWindow &w);
 };
-
 
 class Menu;
 class OptionsMenu;
@@ -110,6 +112,20 @@ namespace Commands {
             double vel;
         public:
             MoveRight(World &world, ::Player &player, double vel) : world{world}, player{player}, vel{vel} {}
+            void execute();
+        };
+        class Shoot : public Command {
+            ::World &world;
+            ::Player &player;
+        public:
+            Shoot(World &world, ::Player &player) : world{world}, player{player} {}
+            void execute();
+        };
+        class Bomb : public Command {
+            ::World &world;
+            ::Player &player;
+        public:
+            Bomb(World &world, ::Player &player) : world{world}, player{player} {}
             void execute();
         };
     };

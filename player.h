@@ -21,7 +21,7 @@ public:
     double getHitboxRadius() { return hitbox_radius; }
     void setLocation(Vec2 _loc) { loc = _loc; }
     void move(Vec2);
-    std::vector< std::shared_ptr<Bullet> > get_bullets(int);
+    std::vector< std::shared_ptr<Bullet> > getBullets(int);
 };
 
 #endif

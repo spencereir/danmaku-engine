@@ -7,6 +7,7 @@
 #include "main_options_menu.h"
 #include "main_menu.h"
 #include "input.h"
+#include "player.h"
 
 Game::Game(std::string options_file) : options{loadOptionsFromFile(options_file)}, window{sf::VideoMode(options.SCREEN_WIDTH, options.SCREEN_HEIGHT), options.WINDOW_TITLE}, finished{false} {
     pushState(GameStateType::MainMenu);
@@ -18,7 +19,27 @@ Game::~Game() {
     popState(0);
 }
 
+#include <iostream>
+
 void Game::handleInput() {
+    while (!new_states.empty()) {
+        auto p = new_states.front();
+        new_states.pop();
+        std::cout << p.first << " " << p.second << std::endl;
+        std::cout << (p.second != nullptr) << std::endl;
+        if (p.second != nullptr) {
+            state.push_back(p.second);
+        } else if (p.first == -1) {
+            state.pop_back();
+        } else {
+            while ((int)state.size() > p.first) {
+                std::cout << "desired size is " << p.first << std::endl;
+                std::cout << "current size: " << state.size() << std::endl;
+                state.pop_back();
+                std::cout << "popped one" << std::endl;
+            }
+        }
+    }
     if (state.empty()) finished = true;
     else state.back()->handleInput();
 }
@@ -36,31 +57,25 @@ void Game::draw() {
 void Game::pushState(GameStateType gst) {
     switch (gst) {
         case GameStateType::MainMenu:
-            state.push_back(std::make_shared<MainMenu>(*this));
+            new_states.push(std::make_pair(0, std::make_shared<MainMenu>(*this)));
             break;
         case GameStateType::PauseMenu:
-            state.push_back(std::make_shared<Pause>(*this));
+            new_states.push(std::make_pair(0, std::make_shared<Pause>(*this)));
             break;
         case GameStateType::MainOptionsMenu:
-            state.push_back(std::make_shared<MainOptionsMenu>(*this));
+            new_states.push(std::make_pair(0, std::make_shared<MainOptionsMenu>(*this)));
             break;
         case GameStateType::World:
-            state.push_back(std::make_shared<World>(*this));
+            new_states.push(std::make_pair(0, std::make_shared<World>(*this)));
             break;
     }
 }
 
 void Game::popState(int to_size) {
-    if (to_size < 0) {
-        state.pop_back();
-        return;
-    }
-    while ((int)state.size() > to_size) {
-        state.pop_back();
-    }
+    new_states.push(std::make_pair(to_size, nullptr));
 }
 
-GameState::GameState(Game &g) : parent{g}, window{g.getWindow()}, ih{std::make_unique<InputHandler>()} {}
+GameState::GameState(Game &g) : parent{g}, window{g.getWindow()}, ih{std::make_unique<InputHandler>(g)} {}
 
 void GameState::setKeymap(Keymap keymap) {
     ih->setKeymap(keymap);

@@ -4,12 +4,16 @@
 #include "options_menu.h"
 #include "world.h"
 #include "player.h"
+#include "game.h"
 
 std::vector< std::shared_ptr< Command > > InputHandler::handleInput(sf::RenderWindow &window) {
     std::set< sf::Keyboard::Key > key_pressed;
     sf::Event event;
     while (window.pollEvent(event)) {
-        if (event.type == sf::Event::KeyPressed) {
+        if (event.type == sf::Event::Closed) {
+            g.close();
+            return {};
+        } else if (event.type == sf::Event::KeyPressed) {
             key_pressed.insert(event.key.code);
         }
     }
@@ -76,6 +80,20 @@ void Commands::Player::MoveUp::execute() {
 
 void Commands::Player::MoveDown::execute() {
     player.move({0, vel});
+}
+
+#include <iostream>
+
+void Commands::Player::Shoot::execute() {
+    std::cout << "Hi" << std::endl;
+    for (auto x : player.getBullets(world.getFrame())) {
+        world.registerBullet(x);
+        std::cout << "Registered " << x << std::endl;
+    }
+}
+
+void Commands::Player::Bomb::execute() {
+//    player.move({0, vel});
 }
 
 void Commands::World::Pause::execute() {

@@ -6,7 +6,7 @@
 #include "data.h"
 #include "path.h"
 
-std::vector< std::shared_ptr<Bullet> > Spawners::BoWaP::get_bullets(int frame) {
+std::vector< std::shared_ptr<Bullet> > Spawners::BoWaP::getBullets(int frame) {
     std::vector< std::shared_ptr<Bullet> > bullets;
     if (frame % period == 0) {
         for (int i = 0; i < 6; i++) {

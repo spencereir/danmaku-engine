@@ -22,6 +22,8 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()} {
         { {sf::Keyboard::LShift, sf::Keyboard::Right}, {}, std::make_shared<Commands::Player::MoveRight>(*this, *player, focus_vel-player_vel)},
         { {sf::Keyboard::LShift, sf::Keyboard::Up}, {}, std::make_shared<Commands::Player::MoveUp>(*this, *player, focus_vel-player_vel)},
         { {sf::Keyboard::LShift, sf::Keyboard::Down}, {}, std::make_shared<Commands::Player::MoveDown>(*this, *player, focus_vel-player_vel)},
+        { {sf::Keyboard::Z}, {}, std::make_shared<Commands::Player::Shoot>(*this, *player)},
+        { {sf::Keyboard::X}, {}, std::make_shared<Commands::Player::Bomb>(*this, *player)},
         { {}, {sf::Keyboard::Escape}, std::make_shared<Commands::World::Pause>(*this)}
     });
 
@@ -65,15 +67,9 @@ void World::moveBullets() {
 
 void World::spawnBullets() {
     for (std::shared_ptr<Spawner> s : spawner) {
-        for (std::shared_ptr<Bullet> b : s->get_bullets(frame)) {
+        for (std::shared_ptr<Bullet> b : s->getBullets(frame)) {
             registerBullet(b);
         }
-    }
-}
-
-void World::spawnPlayerBullets() {
-    for (std::shared_ptr<Bullet> b : player->get_bullets(frame)) {
-        registerPlayerBullet(b);
     }
 }
 

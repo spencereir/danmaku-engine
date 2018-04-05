@@ -31,6 +31,8 @@ public:
 
     void update() override;
     void draw() override;
+
+    int getFrame() { return frame; }
 };
 
 
