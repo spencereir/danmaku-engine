@@ -85,10 +85,8 @@ void Commands::Player::MoveDown::execute() {
 #include <iostream>
 
 void Commands::Player::Shoot::execute() {
-    std::cout << "Hi" << std::endl;
     for (auto x : player.getBullets(world.getFrame())) {
-        world.registerBullet(x);
-        std::cout << "Registered " << x << std::endl;
+        world.registerPlayerBullet(x);
     }
 }
 

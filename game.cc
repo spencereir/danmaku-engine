@@ -19,24 +19,17 @@ Game::~Game() {
     popState(0);
 }
 
-#include <iostream>
-
 void Game::handleInput() {
     while (!new_states.empty()) {
         auto p = new_states.front();
         new_states.pop();
-        std::cout << p.first << " " << p.second << std::endl;
-        std::cout << (p.second != nullptr) << std::endl;
         if (p.second != nullptr) {
             state.push_back(p.second);
         } else if (p.first == -1) {
             state.pop_back();
         } else {
             while ((int)state.size() > p.first) {
-                std::cout << "desired size is " << p.first << std::endl;
-                std::cout << "current size: " << state.size() << std::endl;
                 state.pop_back();
-                std::cout << "popped one" << std::endl;
             }
         }
     }

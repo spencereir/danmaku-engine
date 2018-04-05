@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include "world.h"
 #include "resources.h"
 #include "spawner.h"
@@ -28,7 +29,8 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()} {
     });
 
     player->setLocation({100,900});
-    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(1, 6, 0.05, 3);
+//    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(1, 6, 0.05, 3);
+    std::shared_ptr<Spawner> s = std::make_shared<Spawners::Spread>(0, PI/3.0);
     s->setLocation({300,200});
     player_vel = 5;
     registerSpawner(s);
@@ -47,22 +49,20 @@ void World::registerSpawner(std::shared_ptr<Spawner> s) {
 }
 
 void World::moveBullets() {
-    std::vector< std::shared_ptr<Bullet> > new_bullets;
     for (std::shared_ptr<Bullet> b : bullet) {
         b->move();
-        if (b->getLocation().x >= -10 && b->getLocation().x <= 1000 && b->getLocation().y >= -10 && b->getLocation().y <= 1200) {
-            new_bullets.push_back(b);
-        }
     }
-    bullet = new_bullets;
 
-    new_bullets.clear();
     for (std::shared_ptr<Bullet> b : player_bullet) {
         b->move();
-        if (b->getLocation().y >= 0)
-            new_bullets.push_back(b);
     }
-    player_bullet = new_bullets;
+
+    auto is_oob = [](std::shared_ptr<Bullet> b) -> bool {
+        Vec2 v = b->getLocation();
+        return (v.x < -10 || v.x > 1000 || v.y < -10 || v.y > 1200);
+    };
+    bullet.erase(std::remove_if(bullet.begin(), bullet.end(), is_oob), bullet.end());
+    player_bullet.erase(std::remove_if(player_bullet.begin(), player_bullet.end(), is_oob), player_bullet.end());
 }
 
 void World::spawnBullets() {
@@ -71,6 +71,11 @@ void World::spawnBullets() {
             registerBullet(b);
         }
     }
+
+    auto is_dead = [this](std::shared_ptr<Spawner> s) -> bool {
+        return s->isFinished(frame);
+    };
+    spawner.erase(std::remove_if(spawner.begin(), spawner.end(), is_dead), spawner.end());
 }
 
 void World::checkCollisions() {
