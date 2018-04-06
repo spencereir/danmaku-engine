@@ -13,6 +13,7 @@ class Drawable {
     std::vector< std::vector< sf::Sprite > > spritesheet;
 
 public:
+    Drawable() = default;
     Drawable(std::vector< std::vector< std::string > >, int=10);
     void setState(int);
     void setRate(int);

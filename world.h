@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include "game.h"
+#include "background.h"
+#include "clock.h"
 
 class Bullet;
 class Spawner;
@@ -14,15 +16,14 @@ class World : public GameState {
     std::vector< std::shared_ptr<Bullet> > bullet;
     std::vector< std::shared_ptr<Bullet> > player_bullet;
     std::vector< std::shared_ptr<Spawner> > spawner;
+    double frame = 0;
+    double velocity_scaling_factor;
+    Background b;
+
     void moveBullets();
     void spawnBullets();
     void spawnPlayerBullets();
     void checkCollisions();
-    int frame = 0;
-
-    Vec2 player_vec;
-    double player_vel;
-
 public:
     World(Game&);
     void registerBullet(std::shared_ptr<Bullet>);
@@ -33,6 +34,7 @@ public:
     void draw() override;
 
     int getFrame() { return frame; }
+    double getVelocityScalingFactor() { return velocity_scaling_factor; }
 };
 
 

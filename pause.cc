@@ -15,6 +15,7 @@ Pause::Pause(Game &g) : Menu{g} {
 }
 
 void Pause::select() {
+    parent.getClock().resume();
     switch (cursor) {
         case 0:
             parent.popState();

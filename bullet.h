@@ -12,6 +12,7 @@ class Bullet : public Drawable {
     std::shared_ptr<Path> p;
     Vec2 loc;
     int lifetime;
+    int last_frame=-1;
     bool manage_path;
     Vec2 loc_cache;
     int cache_time;
@@ -22,7 +23,7 @@ public:
     virtual ~Bullet() = default;
     Vec2 getLocation();
     double getHitboxRadius() { return hitbox_radius; }
-    void move() { lifetime++; }
+    void move(int frame) { lifetime += (last_frame == -1 ? 0 : frame - last_frame); last_frame = frame; }
     void setHitboxRadius(double);
 };
 

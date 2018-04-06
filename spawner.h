@@ -16,7 +16,7 @@ public:
     Vec2 getLocation() { return loc; }
     void setLocation(Vec2 _loc) { loc = _loc; }
     virtual std::vector< std::shared_ptr<Bullet> > getBullets(int) = 0;
-    virtual bool isFinished(int frame) { (void)frame; return false; }
+    virtual bool isFinished() { return false; }
 };
 
 namespace Spawners {
@@ -27,12 +27,13 @@ namespace Spawners {
         int shots;
         int delay;
         int times;
-        int birth_time;
+        int num_shot;
+        int next_shot;
         std::vector< std::shared_ptr<Path> > p;
     public:
-        Spread(int birth_time, double spread=2*PI, double angle=0, double mag=5, int shots=3, int delay=5, int times=3);
+        Spread(double spread=2*PI, double angle=0, double mag=5, int shots=3, int delay=5, int times=5);
         std::vector< std::shared_ptr<Bullet> > getBullets(int) override;
-        bool isFinished(int) override;
+        bool isFinished() override;
     };
     class BoWaP : public Spawner {
         double theta;

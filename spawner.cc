@@ -6,8 +6,8 @@
 #include "data.h"
 #include "path.h"
 
-Spawners::Spread::Spread(int birth_time, double spread, double angle, double mag, int shots, int delay, int times) :
-    spread{spread}, angle{angle}, mag{mag}, shots{shots}, delay{delay}, times{times}, birth_time{birth_time} {
+Spawners::Spread::Spread(double spread, double angle, double mag, int shots, int delay, int times) :
+    spread{spread}, angle{angle}, mag{mag}, shots{shots}, delay{delay}, times{times}, num_shot{0}, next_shot{-1} {
     p.resize(shots);
     for (int i = 0; i < shots; i++) {
         double theta = spread/shots * (i - shots/2.0) + angle;
@@ -17,16 +17,19 @@ Spawners::Spread::Spread(int birth_time, double spread, double angle, double mag
 
 std::vector< std::shared_ptr<Bullet> > Spawners::Spread::getBullets(int frame) {
     std::vector< std::shared_ptr<Bullet> > bullets;
-    if ((frame - birth_time) % delay == 0) {
+    if (next_shot == -1) next_shot = frame;
+    if (frame >= next_shot) {
         for (int i = 0; i < shots; i++) {
             bullets.push_back(std::make_shared<Bullet>(loc, p[i]));
         }
+        next_shot += delay;
+        num_shot++;
     }
     return bullets;
 }
 
-bool Spawners::Spread::isFinished(int frame) {
-    return (frame - birth_time) > delay * (times + 1);
+bool Spawners::Spread::isFinished() {
+    return num_shot >= times;
 }
 
 std::vector< std::shared_ptr<Bullet> > Spawners::BoWaP::getBullets(int frame) {

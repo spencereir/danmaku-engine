@@ -7,6 +7,7 @@
 #include <queue>
 #include "data.h"
 #include "input.h"
+#include "clock.h"
 
 class Game;
 class InputHandler;
@@ -33,6 +34,7 @@ class Game {
     bool finished;
     std::vector< std::shared_ptr< GameState > > state;
     std::queue< std::pair< int, std::shared_ptr< GameState > > > new_states;
+    Clock clk;
 
 public:
     Game(std::string="game.conf");
@@ -42,6 +44,9 @@ public:
     void handleInput();
     void update();
     void draw();
+
+    Clock &getClock() { return clk; }
+    Options &getOptions() { return options; }
 
     // Game state functions
     void pushState(GameStateType);

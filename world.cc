@@ -10,8 +10,8 @@
 #include "hitbox.h"
 #include "input.h"
 
-World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()} {
-    player_vel = 5.0;
+World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()}, b{"bg.png", g.getOptions()} {
+    double player_vel = 5.0;
     double focus_vel = 2.0;
 
     setKeymap({
@@ -28,9 +28,11 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()} {
         { {}, {sf::Keyboard::Escape}, std::make_shared<Commands::World::Pause>(*this)}
     });
 
+    parent.getClock().restart();
+
     player->setLocation({100,900});
-//    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(1, 6, 0.05, 3);
-    std::shared_ptr<Spawner> s = std::make_shared<Spawners::Spread>(0, PI/3.0);
+    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(1, 6, 0.05, 3);
+//    std::shared_ptr<Spawner> s = std::make_shared<Spawners::Spread>(PI/3.0);
     s->setLocation({300,200});
     player_vel = 5;
     registerSpawner(s);
@@ -50,11 +52,11 @@ void World::registerSpawner(std::shared_ptr<Spawner> s) {
 
 void World::moveBullets() {
     for (std::shared_ptr<Bullet> b : bullet) {
-        b->move();
+        b->move(frame);
     }
 
     for (std::shared_ptr<Bullet> b : player_bullet) {
-        b->move();
+        b->move(frame);
     }
 
     auto is_oob = [](std::shared_ptr<Bullet> b) -> bool {
@@ -73,7 +75,7 @@ void World::spawnBullets() {
     }
 
     auto is_dead = [this](std::shared_ptr<Spawner> s) -> bool {
-        return s->isFinished(frame);
+        return s->isFinished();
     };
     spawner.erase(std::remove_if(spawner.begin(), spawner.end(), is_dead), spawner.end());
 }
@@ -87,15 +89,21 @@ void World::checkCollisions() {
     }
 }
 
+#include <iostream>
 void World::update() {
-    frame++;
+    velocity_scaling_factor = parent.getClock().lap().asMicroseconds() / 16666.666;
+    std::cout << velocity_scaling_factor << std::endl;
+
+    frame = parent.getClock().getElapsedTime().asMicroseconds() / 16666.666;
     moveBullets();
     spawnBullets();
     checkCollisions();
+    b.move(velocity_scaling_factor);
 }
 
 void World::draw() {
     window.clear();
+    b.draw(window);
     for (std::shared_ptr<Bullet> b : bullet) {
         b->draw(window);
     }
