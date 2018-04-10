@@ -4,15 +4,15 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "drawable.h"
+#include "movable.h"
 #include "data.h"
 
 class Path;
 
-class Bullet : public Drawable {
+class Bullet : public Drawable, public Movable {
+    Vec2 initial_loc;
     std::shared_ptr<Path> p;
-    Vec2 loc;
-    int lifetime;
-    int last_frame=-1;
+    double lifetime;
     bool manage_path;
     Vec2 loc_cache;
     int cache_time;
@@ -21,9 +21,9 @@ class Bullet : public Drawable {
 public:
     Bullet(Vec2, std::shared_ptr<Path>, double=DEFAULT_BULLET_HITBOX_RADIUS);
     virtual ~Bullet() = default;
-    Vec2 getLocation();
+    Vec2 &getLocation() override;
     double getHitboxRadius() { return hitbox_radius; }
-    void move(int frame) { lifetime += (last_frame == -1 ? 0 : frame - last_frame); last_frame = frame; }
+    void move(double frame) override { lifetime += frame; }
     void setHitboxRadius(double);
 };
 

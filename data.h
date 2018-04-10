@@ -27,6 +27,8 @@ struct Options {
     int SCREEN_WIDTH = 800;
     int SCREEN_HEIGHT = 600;
     int FRAME_LIMIT = 60;
+    int REF_FRAME = 60;
+    bool FRAME_SYNC = false;
     std::string WINDOW_TITLE = "Bullet Hell Demo";
 };
 

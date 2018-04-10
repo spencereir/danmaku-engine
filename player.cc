@@ -7,14 +7,8 @@ Player::Player() : Drawable{ { { "resources/textures/players/reimu/back.png" } }
     p = std::make_shared<Paths::ThetaMag>(-PI/2.0, 10);
 }
 
-void Player::move(Vec2 vel) {
-    loc += vel;
-}
-
-std::vector< std::shared_ptr<Bullet> > Player::getBullets(int frame) {
+std::vector< std::shared_ptr<Bullet> > Player::getBullets() {
     std::vector< std::shared_ptr<Bullet> > bullets;
-    if (frame % 3 == 0) {
-        bullets.push_back(std::make_shared<Bullet>(loc,p));;
-    }
+    bullets.push_back(std::make_shared<Bullet>(getLocation(),p));;
     return bullets;
 }

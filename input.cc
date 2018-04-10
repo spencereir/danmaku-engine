@@ -67,29 +67,29 @@ void Commands::OptionsMenu::Select::execute() {
 }
 
 void Commands::Player::MoveLeft::execute() {
-    player.move({-vel*world.getVelocityScalingFactor(), 0});
+    player.getVelocity().x -= vel;
 }
 
 void Commands::Player::MoveRight::execute() {
-    player.move({vel*world.getVelocityScalingFactor(), 0});
+    player.getVelocity().x += vel;
 }
 
 void Commands::Player::MoveUp::execute() {
-    player.move({0, -vel*world.getVelocityScalingFactor()});
+    player.getVelocity().y -= vel;
 }
 
 void Commands::Player::MoveDown::execute() {
-    player.move({0, vel*world.getVelocityScalingFactor()});
+    player.getVelocity().y += vel;
 }
 
 void Commands::Player::Shoot::execute() {
-    for (auto x : player.getBullets(world.getFrame())) {
+    for (auto x : player.getBullets()) {
         world.registerPlayerBullet(x);
     }
 }
 
 void Commands::Player::Bomb::execute() {
-//    player.move({0, vel});
+
 }
 
 void Commands::World::Pause::execute() {

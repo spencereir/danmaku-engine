@@ -10,6 +10,10 @@ sf::Time Clock::lap() {
     return ret;
 }
 
+int Clock::getTicker() {
+    return ticker;
+}
+
 void Clock::restart() {
     pause_time = sf::Time{};
     lap_time = sf::Time{};
@@ -25,4 +29,8 @@ void Clock::resume() {
     sf::Time t = pause_clock.getElapsedTime();
     pause_time += t;
     lap_time += t;
+}
+
+void Clock::tick() {
+    ticker++;
 }

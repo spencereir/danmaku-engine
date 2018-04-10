@@ -2,19 +2,16 @@
 #define __SPAWNER_H_
 
 #include <vector>
+#include "movable.h"
 #include "data.h"
 
 class Bullet;
 class Path;
 
-class Spawner {
-protected:
-    Vec2 loc;
+class Spawner : public Movable {
 public:
     Spawner() {}
     virtual ~Spawner() = default;
-    Vec2 getLocation() { return loc; }
-    void setLocation(Vec2 _loc) { loc = _loc; }
     virtual std::vector< std::shared_ptr<Bullet> > getBullets(int) = 0;
     virtual bool isFinished() { return false; }
 };

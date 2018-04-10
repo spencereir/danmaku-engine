@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 #include <algorithm>
 #include "world.h"
 #include "resources.h"
@@ -15,10 +16,10 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()}, b{"bg.
     double focus_vel = 2.0;
 
     setKeymap({
-        { {sf::Keyboard::Left}, {}, std::make_shared<Commands::Player::MoveLeft>(*this, *player, player_vel)},
-        { {sf::Keyboard::Right}, {}, std::make_shared<Commands::Player::MoveRight>(*this, *player, player_vel)},
-        { {sf::Keyboard::Up}, {}, std::make_shared<Commands::Player::MoveUp>(*this, *player, player_vel)},
-        { {sf::Keyboard::Down}, {}, std::make_shared<Commands::Player::MoveDown>(*this, *player, player_vel)},
+        { {sf::Keyboard::A}, {}, std::make_shared<Commands::Player::MoveLeft>(*this, *player, player_vel)},
+        { {sf::Keyboard::D}, {}, std::make_shared<Commands::Player::MoveRight>(*this, *player, player_vel)},
+        { {sf::Keyboard::W}, {}, std::make_shared<Commands::Player::MoveUp>(*this, *player, player_vel)},
+        { {sf::Keyboard::S}, {}, std::make_shared<Commands::Player::MoveDown>(*this, *player, player_vel)},
         { {sf::Keyboard::LShift, sf::Keyboard::Left}, {}, std::make_shared<Commands::Player::MoveLeft>(*this, *player, focus_vel-player_vel)},
         { {sf::Keyboard::LShift, sf::Keyboard::Right}, {}, std::make_shared<Commands::Player::MoveRight>(*this, *player, focus_vel-player_vel)},
         { {sf::Keyboard::LShift, sf::Keyboard::Up}, {}, std::make_shared<Commands::Player::MoveUp>(*this, *player, focus_vel-player_vel)},
@@ -31,10 +32,10 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()}, b{"bg.
     parent.getClock().restart();
 
     player->setLocation({100,900});
-    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(1, 6, 0.05, 3);
-//    std::shared_ptr<Spawner> s = std::make_shared<Spawners::Spread>(PI/3.0);
+    view.reset({100, 900, (float)parent.getOptions().SCREEN_WIDTH, (float)parent.getOptions().SCREEN_HEIGHT});
+    window.setView(view);
+    std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(5, 3, 0.05, 5);
     s->setLocation({300,200});
-    player_vel = 5;
     registerSpawner(s);
 }
 
@@ -50,13 +51,18 @@ void World::registerSpawner(std::shared_ptr<Spawner> s) {
     spawner.push_back(s);
 }
 
-void World::moveBullets() {
+int World::getFrame() {
+    return parent.getClock().getTicker();
+    //return round(parent.getClock().getElapsedTime().asSeconds() * parent.getOptions().FRAME_LIMIT);
+}
+
+void World::moveBullets(double velocity_factor) {
     for (std::shared_ptr<Bullet> b : bullet) {
-        b->move(frame);
+        b->move(velocity_factor);
     }
 
     for (std::shared_ptr<Bullet> b : player_bullet) {
-        b->move(frame);
+        b->move(velocity_factor);
     }
 
     auto is_oob = [](std::shared_ptr<Bullet> b) -> bool {
@@ -69,7 +75,7 @@ void World::moveBullets() {
 
 void World::spawnBullets() {
     for (std::shared_ptr<Spawner> s : spawner) {
-        for (std::shared_ptr<Bullet> b : s->getBullets(frame)) {
+        for (std::shared_ptr<Bullet> b : s->getBullets(getFrame())) {
             registerBullet(b);
         }
     }
@@ -89,16 +95,17 @@ void World::checkCollisions() {
     }
 }
 
-#include <iostream>
 void World::update() {
-    velocity_scaling_factor = parent.getClock().lap().asMicroseconds() / 16666.666;
-    std::cout << velocity_scaling_factor << std::endl;
-
-    frame = parent.getClock().getElapsedTime().asMicroseconds() / 16666.666;
-    moveBullets();
+    double velocity_factor = (parent.getOptions().FRAME_SYNC ? parent.getClock().lap().asSeconds() * parent.getOptions().REF_FRAME : 1.0);
+    player->move(velocity_factor);
+    player->getVelocity().x = 0;
+    player->getVelocity().y = 0;
+    view.setCenter(player->getLocation().x, player->getLocation().y);
+    window.setView(view);
+    parent.getClock().tick();
+    moveBullets(velocity_factor);
     spawnBullets();
     checkCollisions();
-    b.move(velocity_scaling_factor);
 }
 
 void World::draw() {

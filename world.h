@@ -16,14 +16,14 @@ class World : public GameState {
     std::vector< std::shared_ptr<Bullet> > bullet;
     std::vector< std::shared_ptr<Bullet> > player_bullet;
     std::vector< std::shared_ptr<Spawner> > spawner;
-    double frame = 0;
-    double velocity_scaling_factor;
+    sf::View view;
     Background b;
 
-    void moveBullets();
+    void moveBullets(double);
     void spawnBullets();
     void spawnPlayerBullets();
     void checkCollisions();
+    int getFrame();
 public:
     World(Game&);
     void registerBullet(std::shared_ptr<Bullet>);
@@ -32,9 +32,6 @@ public:
 
     void update() override;
     void draw() override;
-
-    int getFrame() { return frame; }
-    double getVelocityScalingFactor() { return velocity_scaling_factor; }
 };
 
 

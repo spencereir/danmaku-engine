@@ -21,8 +21,12 @@ Options loadOptionsFromFile(std::string filename) {
             ss >> ret.SCREEN_HEIGHT;
         } else if (option_name == "FRAME_LIMIT") {
             ss >> ret.FRAME_LIMIT;
-        } else if (option_name == "wINDOW_TITLE") {
+        } else if (option_name == "WINDOW_TITLE") {
             ret.WINDOW_TITLE = ss.str();
+        } else if (option_name == "FRAME_SYNC") {
+            ss >> ret.FRAME_SYNC;
+        } else if (option_name == "REF_FRAME") {
+            ss >> ret.REF_FRAME;
         }
     }
     return ret;

@@ -8,11 +8,6 @@ Background::Background(std::string filename, Options &options) : t{getResource<s
     s.setTextureRect({0, (int)y, options.SCREEN_WIDTH, options.SCREEN_HEIGHT});
 }
 
-void Background::move(int frames) {
-    y -= frames;
-    s.setTextureRect({0, (int)y, options.SCREEN_WIDTH, options.SCREEN_HEIGHT});
-}
-
 void Background::draw(sf::RenderWindow &w) {
     w.draw(s);
 }

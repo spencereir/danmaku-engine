@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "data.h"
+#include "entity.h"
 
-class Drawable {
+// A Drawable is an Entity that can be drawn to a window
+// Such drawing is done with a provided spritesheet by default
+class Drawable : public virtual Entity {
     int frame;
     int state;
     int rate;
@@ -18,7 +20,6 @@ public:
     void setState(int);
     void setRate(int);
     void draw(sf::RenderWindow&);
-    virtual Vec2 getLocation() = 0;
 };
 
 #endif
