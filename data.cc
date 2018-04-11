@@ -4,6 +4,18 @@
 #include <sstream>
 #include <fstream>
 
+std::ostream &operator<<(std::ostream &o, const Options &opt) {
+    o << "# Automatically generated config file by game"
+      << "\nSCREEN_WIDTH " << opt.SCREEN_WIDTH
+      << "\nSCREEN_HEIGHT " << opt.SCREEN_HEIGHT
+      << "\nFRAME_LIMIT " << opt.FRAME_LIMIT
+      << "\nFRAME_SYNC " << opt.FRAME_SYNC
+      << "\nREF_FRAME " << opt.REF_FRAME
+      << "\nWINDOW_TITLE " << opt.WINDOW_TITLE
+      << "\n";
+    return o;
+}
+
 Options loadOptionsFromFile(std::string filename) {
     std::ifstream fin{filename};
     std::string s;

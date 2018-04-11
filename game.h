@@ -48,6 +48,8 @@ public:
     Clock &getClock() { return clk; }
     Options &getOptions() { return options; }
 
+    void reloadOptions(std::string);
+
     // Game state functions
     void pushState(GameStateType);
     void popState(int=-1);

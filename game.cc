@@ -19,6 +19,10 @@ Game::~Game() {
     popState(0);
 }
 
+void Game::reloadOptions(std::string filename) {
+    options = loadOptionsFromFile(filename);
+}
+
 void Game::handleInput() {
     while (!new_states.empty()) {
         auto p = new_states.front();

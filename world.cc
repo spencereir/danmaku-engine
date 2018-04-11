@@ -11,6 +11,8 @@
 #include "hitbox.h"
 #include "input.h"
 
+#define max(a,b) (a < b ? b : a)
+
 World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()}, b{"bg.png", g.getOptions()} {
     double player_vel = 5.0;
     double focus_vel = 2.0;
@@ -37,6 +39,10 @@ World::World(Game &g) : GameState{g}, player{std::make_unique<Player>()}, b{"bg.
     std::shared_ptr<Spawner> s = std::make_shared<Spawners::BoWaP>(5, 3, 0.05, 5);
     s->setLocation({300,200});
     registerSpawner(s);
+}
+
+World::~World() {
+    window.setView(window.getDefaultView());
 }
 
 void World::registerBullet(std::shared_ptr<Bullet> b) {
@@ -100,7 +106,7 @@ void World::update() {
     player->move(velocity_factor);
     player->getVelocity().x = 0;
     player->getVelocity().y = 0;
-    view.setCenter(player->getLocation().x, player->getLocation().y);
+    view.setCenter(max(parent.getOptions().SCREEN_WIDTH/2, player->getLocation().x), max(parent.getOptions().SCREEN_HEIGHT/2, player->getLocation().y));
     window.setView(view);
     parent.getClock().tick();
     moveBullets(velocity_factor);

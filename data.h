@@ -32,6 +32,7 @@ struct Options {
     std::string WINDOW_TITLE = "Bullet Hell Demo";
 };
 
+std::ostream &operator<<(std::ostream&, const Options&);
 Options loadOptionsFromFile(std::string);
 
 // Vec2

@@ -26,6 +26,7 @@ class World : public GameState {
     int getFrame();
 public:
     World(Game&);
+    ~World();
     void registerBullet(std::shared_ptr<Bullet>);
     void registerPlayerBullet(std::shared_ptr<Bullet>);
     void registerSpawner(std::shared_ptr<Spawner>);
